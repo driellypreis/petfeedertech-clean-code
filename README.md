@@ -18,11 +18,11 @@ Refatorar um código legado aplicando:
 | 'assets/' | Imagens e diagramas usados no projeto |
 
 ## Responsáveis
-**Drielly Pereira dos Reis** - RA: 12524146358
-**Dyamante** - RA: 
-**Ju Silva** - RA:
-**Cecil** - RA: 
-**Gui** - RA: 
+- **Drielly Pereira dos Reis** - RA: 12524146358
+- **Dyamante** - RA: 
+- **Ju Silva** - RA:
+- **Cecil** - RA: 
+- **Gui** - RA: 
 
 ---
 
