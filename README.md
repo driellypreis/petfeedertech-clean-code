@@ -19,10 +19,10 @@ Refatorar um código legado aplicando:
 
 ## Responsáveis
 - **Drielly Pereira dos Reis** - RA: 12524146358
-- **Dyamante** - RA: 
-- **Ju Silva** - RA:
-- **Cecil** - RA: 
-- **Gui** - RA: 
+- **Michel Fernandes Góes** - RA: 12524231884 
+- **Juliana Gleice Silva de Farias** - RA: 1262420824
+- **Cecil Prach da Silva** - RA: 122411815
+- **Guilherme Teodoro de Jesus Silva** - RA: 1272329500
 
 ---
 
