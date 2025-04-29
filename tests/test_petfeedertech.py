@@ -4,7 +4,6 @@ from src import PetFeederTech
 
 class TestPetFeederTech(unittest.TestCase):
     def setUp(self):
-        # Instancia um sistema novo antes de cada teste
         self.feeder = PetFeederTech()
 
     def test_ligar_sistema(self):
@@ -25,14 +24,13 @@ class TestPetFeederTech(unittest.TestCase):
 
     def test_nao_alimentar_sem_racao(self):
         self.feeder.ligar()
-        # Força peso a 0
         self.feeder.sensor.peso = 0
         self.feeder.alimentar()
         self.assertEqual(self.feeder.sensor.medir_peso(), 0)
 
     def test_agendar_alimentacao(self):
         self.feeder.ligar()
-        horario = datetime.now() + timedelta(minutes=1)  # Agenda para 1 minuto no futuro
+        horario = datetime.now() + timedelta(minutes=1)
         self.feeder.agendar_alimentacao(horario)
         self.assertEqual(len(self.feeder.agendamentos), 1)
 
