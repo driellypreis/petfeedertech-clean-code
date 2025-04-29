@@ -195,7 +195,8 @@ class App:
         self.frame_display = tk.Frame(root, bg="#e0e0e0", bd=2, relief="groove")
         self.frame_display.pack(pady=10, padx=10, fill="both", expand=True)
 
-        tk.Label(self.frame_display, text="PetFeederTech", font=("Arial", 16, "bold"), bg="#e0e0e0").pack(pady=5)
+        self.label_titulo = tk.Label(self.frame_display, text="PetFeederTech", font=("Arial", 20, "bold"), bg="#e0e0e0")
+        self.label_titulo.pack(pady=(10, 5))
 
         self.frame_relogio = tk.Frame(self.frame_display, bg="black", width=200, height=40)
         self.frame_relogio.pack(pady=5)
@@ -209,51 +210,25 @@ class App:
         self.btn_ligar = tk.Button(self.frame_display, text="Ligar/Desligar", command=self.pressionar_botao, font=("Arial", 14, "bold"), bg="red", fg="white")
         self.btn_ligar.pack(pady=5)
 
-        self.btn_alimentar = tk.Button(self.frame_display, text="Alimentar Agora", command=self.alimentar, font=("Arial", 12))
+        self.btn_alimentar = tk.Button(self.frame_display, text="Alimentar Agora", command=self.feeder.alimentar, font=("Arial", 12))
         self.btn_alimentar.pack(pady=5)
 
-        self.btn_verificar = tk.Button(self.frame_display, text="Verificar Peso", command=self.verificar, font=("Arial", 12))
+        self.btn_verificar = tk.Button(self.frame_display, text="Verificar Peso", command=self.feeder.verificar_peso, font=("Arial", 12))
         self.btn_verificar.pack(pady=5)
 
-        # Área de Agendamento
         self.frame_agendamento = tk.Frame(self.frame_display, bg="#e0e0e0")
         self.frame_agendamento.pack(pady=10)
 
         self.entry_agendar = tk.Entry(self.frame_agendamento, font=("Arial", 14), width=10, justify="center")
         self.entry_agendar.pack()
         self.entry_agendar.bind("<KeyRelease>", self.formatar_horario_em_tempo_real)
-        
 
         self.freq_var = tk.StringVar(value="Hoje")
         tk.Radiobutton(self.frame_agendamento, text="Hoje", variable=self.freq_var, value="Hoje", bg="#e0e0e0").pack(side="left")
         tk.Radiobutton(self.frame_agendamento, text="Todos os Dias", variable=self.freq_var, value="Todos os Dias", bg="#e0e0e0").pack(side="left")
-        self.entry_agendar.bind("<KeyRelease>", self.formatar_horario_em_tempo_real)
-
-        # Teclado Físico
-        self.frame_teclado = tk.Frame(self.frame_display)
-        self.frame_teclado.pack(pady=5)
-
-        self.criar_teclado()
-
-    def formatar_horario_em_tempo_real(self, event):
-        texto = self.entry_agendar.get().replace(":", "")
-    
-        # Permite só até 4 números (sem considerar o ":")
-        if len(texto) > 4:
-            texto = texto[:4]
-
-        # Agora formata com ":"
-        if len(texto) > 2:
-            texto = texto[:2] + ":" + texto[2:]
-
-        # Atualiza o campo
-        self.entry_agendar.delete(0, tk.END)
-        self.entry_agendar.insert(0, texto)
-
 
         self.btn_agendar = tk.Button(self.frame_display, text="Agendar Alimentação", command=self.agendar, font=("Arial", 12))
         self.btn_agendar.pack(pady=5)
-           
 
         self.btn_configurar = tk.Button(self.frame_display, text="Configurar Pet", command=self.abrir_configuracao, font=("Arial", 12))
         self.btn_configurar.pack(pady=5)
@@ -261,44 +236,29 @@ class App:
         self.btn_sincronizar = tk.Button(self.frame_display, text="Sincronizar Celular", command=self.abrir_celular, font=("Arial", 12))
         self.btn_sincronizar.pack(pady=5)
 
+        self.frame_teclado = tk.Frame(self.frame_display)
+        self.frame_teclado.pack(pady=5)
+
+        self.criar_teclado()
+
         self.app_celular = None
         self.feeder.set_alerta_callback(self.alertar_no_celular)
 
         self.atualizar_hora()
         self.atualizar()
-        
-    def criar_teclado(self):
-        botoes = [
-            ('Limpar',), ('0',), ('Apagar',)
-        ]
-        row = 0
-        col = 0
-        for (texto,) in botoes:
-            action = lambda x=texto: self.adicionar_tecla(x)
-            b = tk.Button(self.frame_teclado, text=texto, width=5, height=2, command=action)
-            b.grid(row=row, column=col, padx=2, pady=2)
-            col += 1
-            if col > 2:
-                col = 0
-                row += 1
 
-    def adicionar_tecla(self, valor):
-        if valor == "Apagar":
-            self.entry_agendar.delete(len(self.entry_agendar.get())-1, tk.END)
-        elif valor == "Limpar":
-            self.entry_agendar.delete(0, tk.END)
-        else:
-            self.entry_agendar.insert(tk.END, valor)
+    def formatar_horario_em_tempo_real(self, event):
+        texto = self.entry_agendar.get().replace(":", "")
+        if len(texto) > 4:
+            texto = texto[:4]
+        if len(texto) > 2:
+            texto = texto[:2] + ":" + texto[2:]
+        self.entry_agendar.delete(0, tk.END)
+        self.entry_agendar.insert(0, texto)
 
     def criar_teclado(self):
-        botoes = [
-            ('1',), ('2',), ('3',),
-            ('4',), ('5',), ('6',),
-            ('7',), ('8',), ('9',),
-            ('0',), ('Apagar',)
-        ]
-        row = 0
-        col = 0
+        botoes = [ ('1',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('0',), ('Apagar',) ]
+        row, col = 0, 0
         for (texto,) in botoes:
             action = lambda x=texto: self.adicionar_tecla(x)
             b = tk.Button(self.frame_teclado, text=texto, width=5, height=2, command=action)
@@ -325,29 +285,16 @@ class App:
         status = "Sistema ligado" if self.feeder.sistema_ativo else "Sistema desligado"
         self.status_text.config(text=status)
 
-    def alimentar(self):
-        self.feeder.alimentar()
-
-    def verificar(self):
-        self.feeder.verificar_peso()
-
     def agendar(self):
         horario_str = self.entry_agendar.get()
-    
-        if not horario_str:
-            self.update_status("Campo vazio.")
-            return
-    
-        if len(horario_str) != 5 or horario_str[2] != ":":
+        if not horario_str or len(horario_str) != 5 or horario_str[2] != ":":
             self.update_status("Formato inválido. Use HH:MM.")
             return
-
         try:
             horario = datetime.strptime(horario_str, "%H:%M").time()
         except ValueError:
             self.update_status("Horário inválido.")
             return
-
         diario = True if self.freq_var.get() == "Todos os Dias" else False
         self.feeder.agendar_alimentacao(horario, diario)
 
