@@ -18,3 +18,23 @@ class TestPetFeederTech(unittest.TestCase):
     self.feeder.alimentar()
     peso_depois = self.feeder.sensor.medir_peso()
     self.assertLess(peso_depois, peso_antes)
+  def test_não_alimentar_sem_ração(self):
+    self.feeder.ligar()
+    self.feeder.sensor.peso = 0
+    self.feeder.alimentar()
+    self.assertEqual(self.feeder.sensor.medir_peso(), 0)
+  def test_agendar_alimentacao(self):
+    self.feeder.ligar()
+    horario = datetime.now() + timedelta(minutes=1)
+    self.feeder.agendar_alimentacao(horario)
+    self.assertEqual(len(self.feeder.agendamentos), 1)
+  def test_conectar_wifi(self):
+    self.feeder.conectar_wifi()
+    self.assertTrue(self.feeder.wifi.conectado)
+  def test_desconectar_wifi(self):
+    self.feeder.conectar_wifi()
+    self.feeder.desconectar_wifi()
+    self.assertFalse(self.feeder.wifi.conectado)
+
+if __name__ == '__main__':
+    unittest.main() 
